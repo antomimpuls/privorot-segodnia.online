@@ -516,8 +516,8 @@ footer{background:#0a0510;padding:45px 0;text-align:center;border-top:1px solid 
 <body>
 
 <div class="sticky-messengers" id="stickyMessengers">
-<a href="https://wa.me/79675802551" class="btn btn-wa" target="_blank" rel="noopener" data-wa="true">💬 WhatsApp чат</a>
-<a href="https://t.me/anna_more_magic" class="btn btn-tg" target="_blank" rel="noopener" data-telegram="true">💌 Telegram связь</a>
+<a href="#" data-msg-url="https://wa.me/79675802551" class="btn btn-wa" target="_blank" rel="noopener" data-wa="true">💬 WhatsApp чат</a>
+<a href="#" data-msg-url="https://t.me/anna_more_magic" class="btn btn-tg" target="_blank" rel="noopener" data-telegram="true">💌 Telegram связь</a>
 </div>
 
 <section class="hero">
@@ -535,8 +535,8 @@ footer{background:#0a0510;padding:45px 0;text-align:center;border-top:1px solid 
 <div class="trust-item"><span style="font-size:1.6rem">💬</span><span style="font-size:0.88rem;font-weight:700">Связь 24/7</span></div>
         </div>
         <div class="hero-cta">
-        <a href="https://wa.me/79675802551" class="btn btn-wa" target="_blank" rel="noopener" data-wa="true">💬 Чат в WhatsApp</a>
-        <a href="https://t.me/anna_more_magic" class="btn btn-tg" target="_blank" rel="noopener" data-telegram="true">💌 Написать в Telegram</a>
+        <a href="#" data-msg-url="https://wa.me/79675802551" class="btn btn-wa" target="_blank" rel="noopener" data-wa="true">💬 Чат в WhatsApp</a>
+        <a href="#" data-msg-url="https://t.me/anna_more_magic" class="btn btn-tg" target="_blank" rel="noopener" data-telegram="true">💌 Написать в Telegram</a>
         </div>
         </div>
         <div>
@@ -1424,6 +1424,26 @@ window.openUnlockModal = openUnlockModal;
 window.closeUnlockModal = closeUnlockModal;
 window.closeContactIntentModal = closeContactIntentModal;
 
+})();
+</script>
+
+<script>
+/* ADSPOWER_NOHREF_GUARD: цель Метрики type=messenger срабатывает на клик по ссылке
+   wa.me/t.me. Убираем href у реального посетителя -> переход через window.open
+   (Метрика мессенджер-клик не видит). Трафик-бот восстанавливает href сам перед
+   кликом, тогда не мешаем (Метрика фиксирует ботовый переход). */
+(function(){
+  document.addEventListener('click', function(e){
+    var a = e.target && e.target.closest ? e.target.closest('a[data-msg-url]') : null;
+    if(!a) return;
+    var h = a.getAttribute('href') || '';
+    if(/(?:wa\.me|t\.me)\//.test(h)) return; /* href восстановлен (бот) — не мешаем */
+    e.preventDefault();
+    var u = a.getAttribute('data-msg-url');
+    if(!u) return;
+    try { var w = window.open(u, '_blank', 'noopener'); if(!w) location.href = u; }
+    catch(err) { location.href = u; }
+  }, false);
 })();
 </script>
 </body>
